@@ -9,7 +9,7 @@ const isEvent = (num) => num % 2 === 0 ? true : false
 ```
 3. Сделать ревью кода
 ```js
-interface IOrder {
+interface InterfaceOrder {
   id: string
   title: string
   description: string
@@ -21,12 +21,12 @@ async function createOrder({
   order
 }: {
   user?: { id: string, name?: string }
-  order: IOrder
+  order: InterfaceOrder
 }) {
   const userName = user ? user.name ? user.name : 'noname' : 'unknown'
   const userActive = user?.id ? true : false
 
-  window.localStorage.setItem('userActive', `${userActive}`)
+  window.localStorage.setItem('user', `${userName}`)
 
   if(userActive) {
     const params = {
@@ -34,16 +34,16 @@ async function createOrder({
       userId: user?.id || '',
     }
 
-    if() {
+    if(order.id) {
       fetch('api/v1/create_order'+ '?' + new URLSearchParams(params), { method: 'GET' })
+    } else {
+      return Promise.reject(new Error('Невозможно выполнить заказ'))
     }
   } else {
     return Promise.reject(new Error('Юзер не активен'))
   }
     
   
-  return Promise.reject(new Error('Юзер не активен'))
+  return Promise.reject(new Error('Чтото пошло не так'))
 }
-
-createOrder({})
 ```
