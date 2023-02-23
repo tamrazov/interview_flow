@@ -43,7 +43,7 @@ async function createOrder({
     }
 
     if(order.id) {
-      fetch('api/v1/create_order'+ '?' + new URLSearchParams(params), { method: 'GET' })
+      fetch('api/v1/create_order' + '?' + new URLSearchParams(params), { method: 'GET' })
         .then(() => console.warn('Заказ успешно создан'))
         .catch(console.error)
     } else {
@@ -57,4 +57,18 @@ async function createOrder({
   return Promise.reject(new Error('Чтото пошло не так'))
 }
 ```
+
+Проблемы этого кода:
+1. Названия везде
+2. Тип юзера можно вынести
+3. Тип возвращаего ?
+4. сайд-эффект
+5. userActive нужен здесь?
+6. убрать ифы
+7. Промисы и асинки
+8. Запрос
+9. Исключения
+10. Ответственность этой функции
+
+
 7. Расскажи про реакт? виртуал дом? зачем ключи? какие хуки знаешь?
