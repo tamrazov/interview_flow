@@ -71,4 +71,25 @@ async function createOrder({
 10. Ответственность этой функции
 
 
+import { useEffect, useRef } from 'react';
+
+/**
+ * Custom React hook that calls a function only once.
+ *
+ * @param {Function} callback - The function to be called.
+ */
+const useCallOnce = (callback: Function) => {
+  const hasCalled = useRef(false);
+
+  useEffect(() => {
+    if (!hasCalled.current) {
+      callback();
+      hasCalled.current = true;
+    }
+  }, [callback]);
+};
+
+export default useCallOnce;
+
+
 7. Расскажи про реакт? виртуал дом? зачем ключи? какие хуки знаешь?
