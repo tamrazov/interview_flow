@@ -172,5 +172,13 @@ Cypress или другие инструменты.
 
 Профилирование и оптимизация кода.
 Ленивая загрузка компонентов и ресурсов
-export default useCallOnce;
 
+
+
+// Пример использования
+const multiplyByTwo = multiplyBy(2);
+const multiplyByFive = multiplyBy(5);
+
+console.log(multiplyByTwo(3)); // Ожидаемый результат: 2 * 3 = 6
+console.log(multiplyByFive(4)); // Ожидаемый результат: 5 * 4 = 20
+console.log(multiplyByTwo(5)); // Ожидаемый
