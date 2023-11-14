@@ -89,9 +89,9 @@ const useCallOnce = (callback: Function) => {
   }, [callback]);
 };
 
+7. Расскажи про реакт? виртуал дом? зачем ключи? какие хуки знаешь?
 
-
-План собеседования Middle React Frontend Developer:
+   План собеседования Middle React Frontend Developer:
 Основы HTML и CSS:
 
 HTML:
@@ -174,5 +174,3 @@ Cypress или другие инструменты.
 Ленивая загрузка компонентов и ресурсов
 export default useCallOnce;
 
-
-7. Расскажи про реакт? виртуал дом? зачем ключи? какие хуки знаешь?
