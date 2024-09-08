@@ -218,7 +218,6 @@ async function createOrder({
 
   window.localStorage.setItem('user', `${userName}`);
 
-  // Проблема: Незаметная мутация объектов
   if (order.description.length > 20) {
     order.date = new Date().toISOString(); // обновляем поле даты у заказа
   }
@@ -230,17 +229,14 @@ async function createOrder({
     };
 
     if (order.id) {
-      // Проблема: Параллельный вызов нескольких запросов без `await`
       const checkInventoryPromise = fetch('api/v1/check_inventory' + '?' + new URLSearchParams(params), { method: 'GET' });
       const createOrderPromise = fetch('api/v1/create_order' + '?' + new URLSearchParams(params), { method: 'GET' });
     
-      // Ожидание завершения промисов
       checkInventoryPromise
         .then(response => response.json())
         .then(inventoryResult => {
           if (!inventoryResult.available) {
             console.error('Инвентарь недоступен');
-            // Проблема: Скрытие ошибок и создание общей ошибки
             console.error('Произошла ошибка создания заказа: Инвентарь недоступен');
             return Promise.reject(new Error('Unable to place order.'));
           }
@@ -255,12 +251,10 @@ async function createOrder({
           return Promise.reject(new Error('Something went wrong.'));
         });
     } else {
-      // Проблема: Скрытие ошибок и создание общей ошибки
       console.error('Произошла ошибка создания заказа: Отсутствует ID заказа');
       return Promise.reject(new Error('Unable to place order.'));
     }
   } else {
-    // Проблема: Скрытие ошибок и создание общей ошибки
     console.error('Произошла ошибка создания заказа: Пользователь не активен');
     return Promise.reject(new Error('Unable to place order.'));
   }
