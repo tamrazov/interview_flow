@@ -269,7 +269,6 @@ createOrder({
   order: { id: '456', title: 'New Order', description: 'A long description to trigger mutation error', date: new Date().toISOString() }
 })
 .catch(error => {
-  // Обработка общей ошибки в вызывающем коде
   console.error('Ошибка создания заказа:', error.message);
 });
 
