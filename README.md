@@ -198,3 +198,85 @@ const result2 = mergeObjects({ name: "John" }, { age: 25 });
 console.log(result2); // Ожидаемый результат: { name: "John", age: 25 }
 
 
+```js
+interface InterfaceOrder {
+  id: string
+  title: string
+  description: string
+  date: string
+}
+
+async function createOrder({
+  user,
+  order
+}: {
+  user?: { id: string, name?: string }
+  order: InterfaceOrder
+}) {
+  const userName = user ? (user.name ? user.name : 'noname') : 'unknown';
+  const userActive = user?.id ? true : false;
+
+  window.localStorage.setItem('user', `${userName}`);
+
+  // Проблема: Незаметная мутация объектов
+  if (order.description.length > 20) {
+    order.date = new Date().toISOString(); // обновляем поле даты у заказа
+  }
+
+  if (userActive) {
+    const params = {
+      id: order.id,
+      userId: user?.id || '',
+    };
+
+    if (order.id) {
+      // Проблема: Параллельный вызов нескольких запросов без `await`
+      const checkInventoryPromise = fetch('api/v1/check_inventory' + '?' + new URLSearchParams(params), { method: 'GET' });
+      const createOrderPromise = fetch('api/v1/create_order' + '?' + new URLSearchParams(params), { method: 'GET' });
+    
+      // Ожидание завершения промисов
+      checkInventoryPromise
+        .then(response => response.json())
+        .then(inventoryResult => {
+          if (!inventoryResult.available) {
+            console.error('Инвентарь недоступен');
+            // Проблема: Скрытие ошибок и создание общей ошибки
+            console.error('Произошла ошибка создания заказа: Инвентарь недоступен');
+            return Promise.reject(new Error('Unable to place order.'));
+          }
+          return createOrderPromise;
+        })
+        .then(response => response.json())
+        .then(orderResult => {
+          console.warn('Заказ успешно создан', orderResult);
+        })
+        .catch(error => {
+          console.error(error.toString());
+          return Promise.reject(new Error('Something went wrong.'));
+        });
+    } else {
+      // Проблема: Скрытие ошибок и создание общей ошибки
+      console.error('Произошла ошибка создания заказа: Отсутствует ID заказа');
+      return Promise.reject(new Error('Unable to place order.'));
+    }
+  } else {
+    // Проблема: Скрытие ошибок и создание общей ошибки
+    console.error('Произошла ошибка создания заказа: Пользователь не активен');
+    return Promise.reject(new Error('Unable to place order.'));
+  }
+
+  console.error('Произошла неизвестная ошибка');
+  return Promise.reject(new Error('Something went wrong.'));
+}
+
+// Пример вызова функции createOrder для тестирования
+createOrder({
+  user: { id: '123', name: 'john_doe' },
+  order: { id: '456', title: 'New Order', description: 'A long description to trigger mutation error', date: new Date().toISOString() }
+})
+.catch(error => {
+  // Обработка общей ошибки в вызывающем коде
+  console.error('Ошибка создания заказа:', error.message);
+});
+
+```
