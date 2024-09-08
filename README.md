@@ -219,7 +219,7 @@ async function createOrder({
   window.localStorage.setItem('user', `${userName}`);
 
   if (order.description.length > 20) {
-    order.date = new Date().toISOString(); // обновляем поле даты у заказа
+    order.date = new Date().toISOString();
   }
 
   if (userActive) {
